@@ -1,12 +1,40 @@
 import { PersonDetail, PersonCharacter, v0_RelatedSubject, Paged_Person } from '@/types';
 import bgmApi from './bgm-api';
 
+// ========== 人物搜索 - Person Search ==========
+
+/**
+ * 搜索人物 - Search Persons
+ * @param body 搜索參數 - Search parameters
+ * @param params 查詢參數 - Query parameters
+ * @returns Promise<Paged_Person> 搜索結果
+ */
+export const SearchPersons = (
+    body: {
+        /** 搜索關鍵字 - Search keyword (必填) */
+        keyword: string;
+        /** 篩選條件 - Filter conditions (可選) */
+        filter?: {
+            /** 職業 - Career (可選) */
+            career?: string[];
+        };
+    },
+    params?: {
+        /** 每頁數量 - Items per page (可選) */
+        limit?: number;
+        /** 偏移量 - Offset (可選) */
+        offset?: number;
+    }
+): Promise<Paged_Person> => {
+    return bgmApi.post<Paged_Person>('/v0/search/persons', body, { params });
+};
+
 // ========== 人物基本操作 - Basic Person Operations ==========
 
 /**
- * 獲取人物 - Get Person
+ * 獲取人物詳情 - Get Person Detail
  * @param person_id 人物 ID - Person ID
- * @returns Promise<PersonDetail> 人物信息
+ * @returns Promise<PersonDetail> 人物詳情
  */
 export const GetPerson = (person_id: number): Promise<PersonDetail> => {
     return bgmApi.get<PersonDetail>(`/v0/persons/${person_id}`);
@@ -15,11 +43,13 @@ export const GetPerson = (person_id: number): Promise<PersonDetail> => {
 /**
  * 獲取人物圖片 - Get Person Image
  * @param person_id 人物 ID - Person ID
- * @param type 圖片類型 - Image type (small|grid|large|medium)
+ * @param type 圖片類型 - Image type
  * @returns Promise<string> 圖片URL (通過302重定向)
  */
 export const GetPersonImage = (person_id: number, type: 'small' | 'grid' | 'large' | 'medium'): Promise<string> => {
-    return bgmApi.get<string>(`/v0/persons/${person_id}/image?type=${type}`);
+    return bgmApi.get<string>(`/v0/persons/${person_id}/image`, {
+        params: { type },
+    });
 };
 
 /**
@@ -38,24 +68,6 @@ export const GetPersonSubjects = (person_id: number): Promise<v0_RelatedSubject[
  */
 export const GetPersonCharacters = (person_id: number): Promise<PersonCharacter[]> => {
     return bgmApi.get<PersonCharacter[]>(`/v0/persons/${person_id}/characters`);
-};
-
-// ========== 人物搜索 - Person Search ==========
-
-/**
- * 搜索人物 - Search Persons
- * @param params 搜索參數 - Search parameters
- * @returns Promise<Paged_Person> 搜索結果
- */
-export const SearchPersons = (params: {
-    keyword: string;
-    filter?: {
-        career?: string[];
-    };
-    limit?: number;
-    offset?: number;
-}): Promise<Paged_Person> => {
-    return bgmApi.post<Paged_Person>('/v0/search/persons', params);
 };
 
 // ========== 人物收藏 - Person Collection ==========

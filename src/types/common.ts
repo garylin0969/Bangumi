@@ -156,6 +156,20 @@ export enum PersonType {
 }
 
 /**
+ * 血型 - Blood Type
+ */
+export enum BloodType {
+    /** A型 - Type A */
+    A = 1,
+    /** B型 - Type B */
+    B = 2,
+    /** AB型 - Type AB */
+    AB = 3,
+    /** O型 - Type O */
+    O = 4,
+}
+
+/**
  * 條目關聯類型 - Subject Relation Type
  */
 export enum SubjectRelationType {
