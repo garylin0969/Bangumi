@@ -1,15 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'https://api.bgm.tv';
-
-// 創建 axios 實例
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'User-Agent': 'Bangumi/0.1.0 (https://github.com/your-username/Bangumi)',
-    'Content-Type': 'application/json',
-  },
-});
+import bgmApi from './bgm-api';
 
 // 類型定義
 export interface Subject {
@@ -117,15 +106,15 @@ export interface SearchResult {
 export const bangumiApi = {
   // 獲取條目信息
   getSubject: (id: number): Promise<Subject> =>
-    api.get(`/v0/subjects/${id}`).then(res => res.data),
+    bgmApi.get<Subject>(`/v0/subjects/${id}`),
 
   // 獲取條目角色列表
   getSubjectCharacters: (id: number): Promise<Character[]> =>
-    api.get(`/v0/subjects/${id}/characters`).then(res => res.data),
+    bgmApi.get<Character[]>(`/v0/subjects/${id}/characters`),
 
   // 獲取條目製作人員
   getSubjectPersons: (id: number): Promise<Person[]> =>
-    api.get(`/v0/subjects/${id}/persons`).then(res => res.data),
+    bgmApi.get<Person[]>(`/v0/subjects/${id}/persons`),
 
   // 獲取條目章節
   getSubjectEpisodes: (id: number, type?: number, limit?: number, offset?: number): Promise<{
@@ -139,32 +128,37 @@ export const bangumiApi = {
     if (limit !== undefined) params.append('limit', limit.toString());
     if (offset !== undefined) params.append('offset', offset.toString());
 
-    return api.get(`/v0/subjects/${id}/episodes?${params}`).then(res => res.data);
+    return bgmApi.get<{
+      total: number;
+      limit: number;
+      offset: number;
+      data: Episode[];
+    }>(`/v0/subjects/${id}/episodes?${params.toString()}`);
   },
 
   // 獲取角色信息
   getCharacter: (id: number): Promise<Character> =>
-    api.get(`/v0/characters/${id}`).then(res => res.data),
+    bgmApi.get<Character>(`/v0/characters/${id}`),
 
   // 獲取角色相關條目
   getCharacterSubjects: (id: number): Promise<Subject[]> =>
-    api.get(`/v0/characters/${id}/subjects`).then(res => res.data),
+    bgmApi.get<Subject[]>(`/v0/characters/${id}/subjects`),
 
   // 獲取人物信息
   getPerson: (id: number): Promise<Person> =>
-    api.get(`/v0/persons/${id}`).then(res => res.data),
+    bgmApi.get<Person>(`/v0/persons/${id}`),
 
   // 獲取人物相關角色
   getPersonCharacters: (id: number): Promise<Character[]> =>
-    api.get(`/v0/persons/${id}/characters`).then(res => res.data),
+    bgmApi.get<Character[]>(`/v0/persons/${id}/characters`),
 
   // 獲取人物相關條目
   getPersonSubjects: (id: number): Promise<Subject[]> =>
-    api.get(`/v0/persons/${id}/subjects`).then(res => res.data),
+    bgmApi.get<Subject[]>(`/v0/persons/${id}/subjects`),
 
   // 獲取每週新番時間表
   getCalendar: (): Promise<CalendarItem[]> =>
-    api.get('/calendar').then(res => res.data),
+    bgmApi.get<CalendarItem[]>('/calendar'),
 
   // 搜索條目
   searchSubjects: (keyword: string, type?: number, responseGroup?: 'large' | 'medium' | 'small', start?: number, max_results?: number): Promise<SearchResult> => {
@@ -175,7 +169,7 @@ export const bangumiApi = {
     if (start !== undefined) params.append('start', start.toString());
     if (max_results !== undefined) params.append('max_results', max_results.toString());
 
-    return api.get(`/search/subject/${encodeURIComponent(keyword)}?${params}`).then(res => res.data);
+    return bgmApi.get<SearchResult>(`/search/subject/${encodeURIComponent(keyword)}?${params.toString()}`);
   },
 
   // 獲取用戶基本信息（公開部分）
@@ -191,7 +185,18 @@ export const bangumiApi = {
     sign: string;
     joindate: string;
   }> =>
-    api.get(`/v0/users/${username}`).then(res => res.data),
+    bgmApi.get<{
+      id: number;
+      username: string;
+      nickname: string;
+      avatar: {
+        large: string;
+        medium: string;
+        small: string;
+      };
+      sign: string;
+      joindate: string;
+    }>(`/v0/users/${username}`),
 
   // 獲取用戶收藏（公開部分）
   getUserCollections: (username: string, subject_type?: number, type?: number, limit?: number, offset?: number): Promise<{
@@ -223,7 +228,29 @@ export const bangumiApi = {
     if (limit !== undefined) params.append('limit', limit.toString());
     if (offset !== undefined) params.append('offset', offset.toString());
 
-    return api.get(`/v0/users/${username}/collections?${params}`).then(res => res.data);
+    return bgmApi.get<{
+      total: number;
+      limit: number;
+      offset: number;
+      data: Array<{
+        subject_id: number;
+        subject_type: number;
+        type: number;
+        name: string;
+        name_cn: string;
+        images: {
+          large: string;
+          common: string;
+          medium: string;
+          small: string;
+          grid: string;
+        };
+        comment: string;
+        tags: string[];
+        rating: number;
+        private: boolean;
+      }>;
+    }>(`/v0/users/${username}/collections?${params.toString()}`);
   },
 };
 
