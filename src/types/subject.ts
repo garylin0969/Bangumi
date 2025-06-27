@@ -1,6 +1,7 @@
-// 條目相關類型定義 - Subject Related Types
-import { Images, Rating, Collection, Tag, Pagination, SubjectType, SubjectRelationType } from './common';
+// 條目相關類型定義 - Subject Related Type Definitions
+import { Images, Rating, Collection, Tag, SubjectType, PersonType, CharacterType } from './common';
 import { Episode } from './episode';
+import { Person } from './person';
 
 /**
  * 條目基本信息 - Basic Subject Information
@@ -17,9 +18,7 @@ export interface Subject {
     /** 條目簡介 - Subject summary */
     summary: string;
     /** 首播/發售日期 - Air/Release date */
-    air_date: string;
-    /** 播出星期 - Air weekday (1-7, 1 is Monday) */
-    air_weekday: number;
+    date: string;
     /** 圖片信息 - Images */
     images: Images;
     /** 收藏統計 - Collection statistics */
@@ -44,14 +43,14 @@ export interface Subject {
     series_entry?: number;
     /** 元數據標籤 - Meta tags */
     meta_tags?: string[];
+    /** 信息框原始內容 - Raw infobox content */
+    infobox?: InfoboxItem[];
 }
 
 /**
- * 條目詳細信息 - Detailed Subject Information
+ * 條目詳細信息 - Subject Detail Information
  */
 export interface SubjectDetail extends Subject {
-    /** 信息框原始內容 - Raw infobox content */
-    infobox: InfoboxItem[];
     /** 條目關聯 - Subject relations */
     relations?: SubjectRelation[];
     /** 角色列表 - Characters */
@@ -89,17 +88,37 @@ export interface SubjectRelation {
     /** 關聯條目 ID - Related subject ID */
     id: number;
     /** 關聯類型 - Relation type */
-    type: SubjectRelationType;
+    type: number;
     /** 關聯條目名稱 - Related subject name */
     name: string;
     /** 關聯條目中文名稱 - Related subject Chinese name */
     name_cn: string;
     /** 關聯條目圖片 - Related subject image */
-    image: string;
+    images?: Images;
+    /** 關聯描述 - Relation description */
+    relation: string;
 }
 
 /**
- * 條目中的角色 - Character in Subject
+ * v0版本條目關聯 - v0 Subject Relation
+ */
+export interface v0_subject_relation {
+    /** 條目 ID - Subject ID */
+    id: number;
+    /** 條目類型 - Subject type */
+    type: number;
+    /** 條目名稱 - Subject name */
+    name: string;
+    /** 條目中文名稱 - Subject Chinese name */
+    name_cn: string;
+    /** 條目圖片 - Subject images */
+    images?: Images;
+    /** 關聯類型 - Relation type */
+    relation: string;
+}
+
+/**
+ * 條目中的角色 - Subject Character
  */
 export interface SubjectCharacter {
     /** 角色 ID - Character ID */
@@ -109,7 +128,7 @@ export interface SubjectCharacter {
     /** 角色類型 - Character type */
     type: number;
     /** 角色圖片 - Character images */
-    images: Images;
+    images?: Images;
     /** 角色在條目中的重要性 - Character role in subject */
     relation: string;
     /** 聲優列表 - Voice actors */
@@ -117,7 +136,7 @@ export interface SubjectCharacter {
 }
 
 /**
- * 條目中的人物 - Person in Subject
+ * 條目中的人物 - Subject Person
  */
 export interface SubjectPerson {
     /** 人物 ID - Person ID */
@@ -127,11 +146,63 @@ export interface SubjectPerson {
     /** 人物類型 - Person type */
     type: number;
     /** 人物圖片 - Person images */
-    images: Images;
+    images?: Images;
     /** 人物職位 - Person position */
     career: string[];
     /** 人物在條目中的職位 - Person relation in subject */
     relation: string;
+}
+
+/**
+ * 相關角色 - Related Character
+ */
+export interface RelatedCharacter {
+    /** 角色 ID - Character ID */
+    id: number;
+    /** 角色名稱 - Character name */
+    name: string;
+    /** 角色類型 - Character type */
+    type: CharacterType;
+    /** 角色圖片 - Character images */
+    images?: Images;
+    /** 關聯類型 - Relation type */
+    relation: string;
+    /** 聲優列表 - Voice actors */
+    actors?: Person[];
+}
+
+/**
+ * 相關人物 - Related Person
+ */
+export interface RelatedPerson {
+    /** 人物 ID - Person ID */
+    id: number;
+    /** 人物名稱 - Person name */
+    name: string;
+    /** 人物類型 - Person type */
+    type: PersonType;
+    /** 人物職業 - Person career */
+    career: string[];
+    /** 人物圖片 - Person images */
+    images?: Images;
+    /** 關聯類型 - Relation type */
+    relation: string;
+    /** 參與章節/曲目 - Participated episodes */
+    eps: string;
+}
+
+/**
+ * 分頁條目響應 - Paged Subject Response
+ */
+export interface Paged_Subject {
+    /** 總數 - Total count */
+    total: number;
+    /** 每頁限制 - Items per page limit */
+    limit: number;
+    /** 偏移量 - Offset */
+    offset: number;
+    /** 條目數據 - Subject data */
+    data: Subject[];
 }
 
 /**
@@ -151,16 +222,6 @@ export interface CalendarItem {
     };
     /** 該日播出的條目列表 - Items airing on this day */
     items: Subject[];
-}
-
-/**
- * 搜索結果 - Search Result
- */
-export interface SearchResult {
-    /** 搜索結果總數 - Total search results */
-    results: number;
-    /** 條目列表 - Subject list */
-    list: Subject[];
 }
 
 /**
@@ -215,7 +276,7 @@ export interface SubjectIndex {
 }
 
 /**
- * 索引中的條目 - Subject in Index
+ * 索引中的條目 - Index Subject
  */
 export interface IndexSubject {
     /** 條目 ID - Subject ID */

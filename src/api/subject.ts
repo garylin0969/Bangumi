@@ -1,218 +1,106 @@
 // 條目相關 API - Subject Related API
-import type {
-    CalendarItem,
-    Subject,
-    SubjectDetail,
-    SubjectSearchResult,
-    Character,
-    Person,
-    SubjectIndex,
-    IndexSubject,
-    SubjectStats,
-    SubjectRecommendation,
-} from '@/types';
-import { EpisodesResponse } from '@/types';
+import { Subject, RelatedCharacter, RelatedPerson, v0_subject_relation, Paged_Subject } from '@/types';
 import bgmApi from './bgm-api';
 
 // ========== 條目基本操作 - Basic Subject Operations ==========
 
 /**
- * 獲取每日放送 - Get Calendar
- * @returns Promise<CalendarItem[]> 每日放送數據
- */
-export const GetCalendar = (): Promise<CalendarItem[]> => {
-    return bgmApi.get<CalendarItem[]>('/calendar');
-};
-
-/**
- * 獲取條目信息 - Get Subject Information
- * @param id 條目 ID - Subject ID
- * @returns Promise<Subject> 條目信息
- */
-export const GetSubject = (id: number): Promise<Subject> => {
-    return bgmApi.get<Subject>(`/v0/subjects/${id}`);
-};
-
-/**
- * 獲取條目詳細信息 - Get Subject Detailed Information
- * @param id 條目 ID - Subject ID
- * @returns Promise<SubjectDetail> 條目詳細信息
- */
-export const GetSubjectDetail = (id: number): Promise<SubjectDetail> => {
-    return bgmApi.get<SubjectDetail>(`/v0/subjects/${id}?responseGroup=large`);
-};
-
-/**
- * 獲取多個條目信息 - Get Multiple Subjects Information
- * @param ids 條目 ID 列表 - Subject ID list
- * @returns Promise<Subject[]> 條目信息列表
- */
-export const GetSubjects = (ids: number[]): Promise<Subject[]> => {
-    const idsParam = ids.join(',');
-    return bgmApi.get<Subject[]>(`/v0/subjects?ids=${idsParam}`);
-};
-
-// ========== 條目關聯內容 - Subject Related Content ==========
-
-/**
- * 獲取條目角色列表 - Get Subject Characters
- * @param id 條目 ID - Subject ID
- * @returns Promise<Character[]> 角色列表
- */
-export const GetSubjectCharacters = (id: number): Promise<Character[]> => {
-    return bgmApi.get<Character[]>(`/v0/subjects/${id}/characters`);
-};
-
-/**
- * 獲取條目製作人員 - Get Subject Persons
- * @param id 條目 ID - Subject ID
- * @returns Promise<Person[]> 人物列表
- */
-export const GetSubjectPersons = (id: number): Promise<Person[]> => {
-    return bgmApi.get<Person[]>(`/v0/subjects/${id}/persons`);
-};
-
-/**
- * 獲取條目章節 - Get Subject Episodes
- * @param id 條目 ID - Subject ID
- * @param type 章節類型 - Episode type (可選)
+ * 瀏覽條目 - Browse Subjects
+ * @param type 條目類型 - Subject type
+ * @param cat 條目分類 - Subject category (可選)
+ * @param series 是否系列，僅對書籍類型的條目有效 - Is series, only valid for book type (可選)
+ * @param platform 平台，僅對遊戲類型的條目有效 - Platform, only valid for game type (可選)
+ * @param sort 排序，枚舉值 {date|rank} - Sort order (可選)
+ * @param year 年份 - Year (可選)
+ * @param month 月份 - Month (可選)
  * @param limit 每頁數量 - Items per page (可選)
  * @param offset 偏移量 - Offset (可選)
- * @returns Promise<EpisodesResponse> 章節響應
+ * @returns Promise<Paged_Subject> 條目列表響應
  */
-export const GetSubjectEpisodes = (
-    id: number,
-    type?: number,
-    limit?: number,
-    offset?: number
-): Promise<EpisodesResponse> => {
-    const params = {
-        type,
-        limit,
-        offset,
-    };
+export const GetSubjects = (params: {
+    type: number;
+    cat?: number;
+    series?: boolean;
+    platform?: string;
+    sort?: 'date' | 'rank';
+    year?: number;
+    month?: number;
+    limit?: number;
+    offset?: number;
+}): Promise<Paged_Subject> => {
+    return bgmApi.get<Paged_Subject>('/v0/subjects', { params });
+};
 
-    return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes`, { params });
+/**
+ * 獲取條目 - Get Subject
+ * @param subject_id 條目 ID - Subject ID
+ * @returns Promise<Subject> 條目信息
+ */
+export const GetSubject = (subject_id: number): Promise<Subject> => {
+    return bgmApi.get<Subject>(`/v0/subjects/${subject_id}`);
+};
+
+/**
+ * 獲取條目圖片 - Get Subject Image
+ * @param subject_id 條目 ID - Subject ID
+ * @param type 圖片類型 - Image type (small|grid|large|medium|common)
+ * @returns Promise<string> 圖片URL (通過302重定向)
+ */
+export const GetSubjectImage = (
+    subject_id: number,
+    type: 'small' | 'grid' | 'large' | 'medium' | 'common'
+): Promise<string> => {
+    return bgmApi.get<string>(`/v0/subjects/${subject_id}/image?type=${type}`);
+};
+
+/**
+ * 獲取條目相關人物 - Get Subject Related Persons
+ * @param subject_id 條目 ID - Subject ID
+ * @returns Promise<RelatedPerson[]> 相關人物列表
+ */
+export const GetSubjectPersons = (subject_id: number): Promise<RelatedPerson[]> => {
+    return bgmApi.get<RelatedPerson[]>(`/v0/subjects/${subject_id}/persons`);
+};
+
+/**
+ * 獲取條目相關角色 - Get Subject Related Characters
+ * @param subject_id 條目 ID - Subject ID
+ * @returns Promise<RelatedCharacter[]> 相關角色列表
+ */
+export const GetSubjectCharacters = (subject_id: number): Promise<RelatedCharacter[]> => {
+    return bgmApi.get<RelatedCharacter[]>(`/v0/subjects/${subject_id}/characters`);
 };
 
 /**
  * 獲取條目關聯 - Get Subject Relations
- * @param id 條目 ID - Subject ID
- * @returns Promise<Subject[]> 關聯條目列表
+ * @param subject_id 條目 ID - Subject ID
+ * @returns Promise<v0_subject_relation[]> 關聯條目列表
  */
-export const GetSubjectRelations = (id: number): Promise<Subject[]> => {
-    return bgmApi.get<Subject[]>(`/v0/subjects/${id}/subjects`);
+export const GetSubjectRelations = (subject_id: number): Promise<v0_subject_relation[]> => {
+    return bgmApi.get<v0_subject_relation[]>(`/v0/subjects/${subject_id}/subjects`);
 };
 
 // ========== 條目搜索 - Subject Search ==========
 
 /**
- * 搜索條目 - Search Subjects
- * @param keyword 搜索關鍵字 - Search keyword
- * @param type 條目類型 - Subject type (可選)
- * @param responseGroup 響應組 - Response group (可選)
- * @param start 起始位置 - Start position (可選)
- * @param max_results 最大結果數 - Maximum results (可選)
- * @returns Promise<SubjectSearchResult> 搜索結果
- */
-export const SearchSubjects = (
-    keyword: string,
-    type?: number,
-    responseGroup?: 'large' | 'medium' | 'small',
-    start?: number,
-    max_results?: number
-): Promise<SubjectSearchResult> => {
-    const params = {
-        keyword,
-        type,
-        responseGroup,
-        start,
-        max_results,
-    };
-
-    return bgmApi.get<SubjectSearchResult>(`/search/subject/${encodeURIComponent(keyword)}`, { params });
-};
-
-/**
- * 高級搜索條目 - Advanced Search Subjects
+ * 條目搜索 - Search Subjects
  * @param params 搜索參數 - Search parameters
- * @returns Promise<SubjectSearchResult> 搜索結果
+ * @returns Promise<Paged_Subject> 搜索結果
  */
-export const AdvancedSearchSubjects = (params: {
+export const SearchSubjects = (params: {
     keyword: string;
-    type?: number;
-    tag?: string[];
-    air_date?: string;
-    rating?: { min?: number; max?: number };
-    rank?: { min?: number; max?: number };
-    nsfw?: boolean;
-    sort?: 'match' | 'heat' | 'rate' | 'date';
-    order?: 'asc' | 'desc';
-    offset?: number;
+    sort?: 'match' | 'heat' | 'rank' | 'score';
+    filter?: {
+        type?: number[];
+        meta_tags?: string[];
+        tag?: string[];
+        air_date?: string[];
+        rating?: string[];
+        rank?: string[];
+        nsfw?: boolean;
+    };
     limit?: number;
-}): Promise<SubjectSearchResult> => {
-    return bgmApi.post<SubjectSearchResult>(`/v0/search/subjects`, params);
-};
-
-// ========== 條目統計與推薦 - Subject Statistics & Recommendations ==========
-
-/**
- * 獲取條目統計信息 - Get Subject Statistics
- * @param id 條目 ID - Subject ID
- * @returns Promise<SubjectStats> 條目統計
- */
-export const GetSubjectStats = (id: number): Promise<SubjectStats> => {
-    return bgmApi.get<SubjectStats>(`/v0/subjects/${id}/stats`);
-};
-
-/**
- * 獲取條目推薦 - Get Subject Recommendations
- * @param id 條目 ID - Subject ID
- * @param limit 推薦數量 - Recommendation limit (可選)
- * @returns Promise<SubjectRecommendation[]> 推薦列表
- */
-export const GetSubjectRecommendations = (id: number, limit?: number): Promise<SubjectRecommendation[]> => {
-    const params = { limit };
-    return bgmApi.get<SubjectRecommendation[]>(`/v0/subjects/${id}/recommendations`, { params });
-};
-
-// ========== 條目索引 - Subject Index ==========
-
-/**
- * 獲取條目索引 - Get Subject Index
- * @param id 索引 ID - Index ID
- * @returns Promise<SubjectIndex> 索引信息
- */
-export const GetSubjectIndex = (id: number): Promise<SubjectIndex> => {
-    return bgmApi.get<SubjectIndex>(`/v0/indices/${id}`);
-};
-
-/**
- * 獲取索引中的條目 - Get Subjects in Index
- * @param id 索引 ID - Index ID
- * @param type 條目類型 - Subject type (可選)
- * @param limit 每頁數量 - Items per page (可選)
- * @param offset 偏移量 - Offset (可選)
- * @returns Promise<IndexSubject[]> 索引條目列表
- */
-export const GetIndexSubjects = (
-    id: number,
-    type?: number,
-    limit?: number,
-    offset?: number
-): Promise<IndexSubject[]> => {
-    const params = { type, limit, offset };
-    return bgmApi.get<IndexSubject[]>(`/v0/indices/${id}/subjects`, { params });
-};
-
-/**
- * 搜索條目索引 - Search Subject Indices
- * @param keyword 搜索關鍵字 - Search keyword
- * @param limit 每頁數量 - Items per page (可選)
- * @param offset 偏移量 - Offset (可選)
- * @returns Promise<SubjectIndex[]> 索引列表
- */
-export const SearchSubjectIndices = (keyword: string, limit?: number, offset?: number): Promise<SubjectIndex[]> => {
-    const params = { keyword, limit, offset };
-    return bgmApi.get<SubjectIndex[]>(`/v0/search/indices`, { params });
+    offset?: number;
+}): Promise<Paged_Subject> => {
+    return bgmApi.post<Paged_Subject>('/v0/search/subjects', params);
 };

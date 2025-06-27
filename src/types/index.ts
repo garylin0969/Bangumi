@@ -1,6 +1,6 @@
-// 統一導出所有類型定義 - Unified Type Definitions Export
+// 類型統一匯出文件 - Unified Type Export File
 
-// 基礎公共類型 - Common Types
+// 基礎通用類型 - Common Base Types
 export * from './common';
 
 // 條目相關類型 - Subject Related Types
@@ -15,11 +15,8 @@ export * from './person';
 // 用戶相關類型 - User Related Types
 export * from './user';
 
-// 章節相關類型 - Episode Related Types
-export * from './episode';
-
-// 搜索相關類型 - Search Related Types
-export * from './search';
-
 // 收藏相關類型 - Collection Related Types
 export * from './collection';
+
+// 章節相關類型 - Episode Related Types
+export * from './episode';

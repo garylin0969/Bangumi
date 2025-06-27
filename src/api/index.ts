@@ -3,6 +3,10 @@
  * 條目相關 API 集合 - Subject Related API Collection
  */
 /**
+ * 目錄相關 API 集合 - Catalog Related API Collection
+ */
+import * as CatalogAPI from './catalog';
+/**
  * 角色相關 API 集合 - Character Related API Collection
  */
 import * as CharacterAPI from './character';
@@ -19,9 +23,9 @@ import * as EpisodeAPI from './episode';
  */
 import * as PersonAPI from './person';
 /**
- * 搜索相關 API 集合 - Search Related API Collection
+ * 編輯歷史相關 API 集合 - Revision Related API Collection
  */
-import * as SearchAPI from './search';
+import * as RevisionAPI from './revision';
 import * as SubjectAPI from './subject';
 /**
  * 用戶相關 API 集合 - User Related API Collection
@@ -59,22 +63,21 @@ export * from './collection';
 // ========== 章節相關 API - Episode Related API ==========
 export * from './episode';
 
-// ========== 搜索相關 API - Search Related API ==========
-export * from './search';
+// ========== 編輯歷史相關 API - Revision Related API ==========
+export * from './revision';
 
+// ========== 目錄相關 API - Catalog Related API ==========
+export * from './catalog';
+
+// ========== API 集合導出 - API Collection Exports ==========
 export { SubjectAPI };
-
 export { CharacterAPI };
-
 export { PersonAPI };
-
 export { UserAPI };
-
 export { CollectionAPI };
-
 export { EpisodeAPI };
-
-export { SearchAPI };
+export { RevisionAPI };
+export { CatalogAPI };
 
 // ========== 便捷 API 組合 - Convenient API Combinations ==========
 
@@ -88,7 +91,8 @@ export const BangumiAPI = {
     User: UserAPI,
     Collection: CollectionAPI,
     Episode: EpisodeAPI,
-    Search: SearchAPI,
+    Revision: RevisionAPI,
+    Catalog: CatalogAPI,
 };
 
 /**
@@ -98,24 +102,28 @@ export const CommonAPI = {
     // 條目相關 - Subject Related
     getSubject: SubjectAPI.GetSubject,
     searchSubjects: SubjectAPI.SearchSubjects,
-    getCalendar: SubjectAPI.GetCalendar,
+    getSubjects: SubjectAPI.GetSubjects,
 
     // 用戶相關 - User Related
     getUser: UserAPI.GetUser,
     getCurrentUser: UserAPI.GetCurrentUser,
-    getUserCollections: UserAPI.GetUserCollections,
-
-    // 搜索相關 - Search Related
-    globalSearch: SearchAPI.GlobalSearch,
-    quickSearch: SearchAPI.QuickSearch,
 
     // 收藏相關 - Collection Related
-    getSubjectCollectionStatus: CollectionAPI.GetSubjectCollectionStatus,
-    updateSubjectCollection: CollectionAPI.UpdateSubjectCollection,
+    getUserCollections: CollectionAPI.GetUserCollections,
+    getUserCollection: CollectionAPI.GetUserCollection,
+    postUserCollection: CollectionAPI.PostUserCollection,
 
     // 章節相關 - Episode Related
-    getAllEpisodesOfSubject: EpisodeAPI.GetAllEpisodesOfSubject,
-    updateEpisodeStatus: EpisodeAPI.UpdateEpisodeStatus,
+    getEpisodes: EpisodeAPI.GetEpisodes,
+    getEpisode: EpisodeAPI.GetEpisode,
+
+    // 角色相關 - Character Related
+    getCharacter: CharacterAPI.GetCharacter,
+    searchCharacters: CharacterAPI.SearchCharacters,
+
+    // 人物相關 - Person Related
+    getPerson: PersonAPI.GetPerson,
+    searchPersons: PersonAPI.SearchPersons,
 };
 
 // ========== 類型重新導出 - Type Re-exports ==========

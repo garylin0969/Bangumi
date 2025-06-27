@@ -1,226 +1,165 @@
 // 收藏相關 API - Collection Related API
 import {
-    CollectionItem,
-    CollectionDetail,
-    CollectionListResponse,
-    CollectionRequest,
-    BatchCollectionRequest,
-    BatchCollectionResponse,
-    CollectionFilter,
-    CollectionExport,
+    Paged_UserCollection,
+    UserSubjectCollection,
+    UserSubjectCollectionModifyPayload,
+    UserEpisodeCollection,
+    EpisodeCollectionType,
+    Paged_UserCharacterCollection,
+    UserCharacterCollection,
+    Paged_UserPersonCollection,
+    UserPersonCollection,
 } from '@/types';
 import bgmApi from './bgm-api';
 
-// ========== 收藏基本操作 - Basic Collection Operations ==========
+// ========== 條目收藏管理 - Subject Collection Management ==========
 
 /**
- * 獲取條目收藏狀態 - Get Subject Collection Status
- * @param subject_id 條目 ID - Subject ID
- * @returns Promise<CollectionItem | null> 收藏信息，如果未收藏則返回 null
+ * 獲取用戶收藏 - Get User Collections
+ * @param username 用戶名 - Username
+ * @param subject_type 條目類型 - Subject type (可選)
+ * @param type 收藏類型 - Collection type (可選)
+ * @param limit 每頁數量 - Items per page (可選)
+ * @param offset 偏移量 - Offset (可選)
+ * @returns Promise<Paged_UserCollection> 用戶收藏列表
  */
-export const GetSubjectCollectionStatus = (subject_id: number): Promise<CollectionItem | null> => {
-    return bgmApi.get<CollectionItem | null>(`/v0/me/collections/${subject_id}`);
+export const GetUserCollections = (
+    username: string,
+    subject_type?: number,
+    type?: number,
+    limit?: number,
+    offset?: number
+): Promise<Paged_UserCollection> => {
+    const params = { subject_type, type, limit, offset };
+    return bgmApi.get<Paged_UserCollection>(`/v0/users/${username}/collections`, { params });
 };
 
 /**
- * 添加/更新條目收藏 - Add/Update Subject Collection
+ * 獲取用戶單個條目收藏 - Get User Single Subject Collection
+ * @param username 用戶名 - Username
+ * @param subject_id 條目 ID - Subject ID
+ * @returns Promise<UserSubjectCollection> 用戶條目收藏信息
+ */
+export const GetUserCollection = (username: string, subject_id: number): Promise<UserSubjectCollection> => {
+    return bgmApi.get<UserSubjectCollection>(`/v0/users/${username}/collections/${subject_id}`);
+};
+
+/**
+ * 新增或修改用戶單個條目收藏 - Add or Modify User Subject Collection
  * @param subject_id 條目 ID - Subject ID
  * @param data 收藏數據 - Collection data
- * @returns Promise<CollectionItem> 收藏信息
- */
-export const UpdateSubjectCollection = (subject_id: number, data: CollectionRequest): Promise<CollectionItem> => {
-    return bgmApi.post<CollectionItem>(`/v0/me/collections/${subject_id}`, data);
-};
-
-/**
- * 刪除條目收藏 - Delete Subject Collection
- * @param subject_id 條目 ID - Subject ID
  * @returns Promise<void>
  */
-export const DeleteSubjectCollection = (subject_id: number): Promise<void> => {
-    return bgmApi.delete<void>(`/v0/me/collections/${subject_id}`);
+export const PostUserCollection = (subject_id: number, data: UserSubjectCollectionModifyPayload): Promise<void> => {
+    return bgmApi.post<void>(`/v0/users/-/collections/${subject_id}`, data);
 };
 
 /**
- * 獲取收藏詳情 - Get Collection Detail
+ * 修改用戶單個收藏 - Modify User Single Collection
  * @param subject_id 條目 ID - Subject ID
- * @returns Promise<CollectionDetail> 收藏詳情
+ * @param data 收藏數據 - Collection data
+ * @returns Promise<void>
  */
-export const GetCollectionDetail = (subject_id: number): Promise<CollectionDetail> => {
-    return bgmApi.get<CollectionDetail>(`/v0/me/collections/${subject_id}?responseGroup=large`);
+export const PatchUserCollection = (subject_id: number, data: UserSubjectCollectionModifyPayload): Promise<void> => {
+    return bgmApi.patch<void>(`/v0/users/-/collections/${subject_id}`, data);
 };
 
-// ========== 批量收藏操作 - Batch Collection Operations ==========
+// ========== 章節收藏管理 - Episode Collection Management ==========
 
 /**
- * 批量添加收藏 - Batch Add Collections
- * @param data 批量收藏數據 - Batch collection data
- * @returns Promise<BatchCollectionResponse> 批量操作響應
- */
-export const BatchAddCollections = (data: BatchCollectionRequest): Promise<BatchCollectionResponse> => {
-    return bgmApi.post<BatchCollectionResponse>(`/v0/me/collections/batch`, data);
-};
-
-/**
- * 批量更新收藏狀態 - Batch Update Collection Status
- * @param collections 收藏更新列表 - Collection update list
- * @returns Promise<BatchCollectionResponse> 批量操作響應
- */
-export const BatchUpdateCollections = (
-    collections: {
-        subject_id: number;
-        type: number;
-        rating?: number;
-        comment?: string;
-        private?: boolean;
-    }[]
-): Promise<BatchCollectionResponse> => {
-    const data = { collections };
-    return bgmApi.patch<BatchCollectionResponse>(`/v0/me/collections/batch`, data);
-};
-
-/**
- * 批量刪除收藏 - Batch Delete Collections
- * @param subject_ids 條目 ID 列表 - Subject ID list
- * @returns Promise<BatchCollectionResponse> 批量操作響應
- */
-export const BatchDeleteCollections = (subject_ids: number[]): Promise<BatchCollectionResponse> => {
-    const data = { subject_ids };
-    return bgmApi.delete<BatchCollectionResponse>(`/v0/me/collections/batch`, { data });
-};
-
-// ========== 收藏查詢與過濾 - Collection Query & Filter ==========
-
-/**
- * 獲取收藏列表 - Get Collection List
- * @param filter 過濾條件 - Filter conditions (可選)
- * @param limit 每頁數量 - Items per page (可選)
+ * 獲取章節收藏信息 - Get User Subject Episode Collection
+ * @param subject_id 條目 ID - Subject ID
  * @param offset 偏移量 - Offset (可選)
- * @returns Promise<CollectionListResponse> 收藏列表響應
+ * @param limit 每頁數量 - Items per page (可選)
+ * @param episode_type 章節類型 - Episode type (可選)
+ * @returns Promise<UserEpisodeCollection[]> 章節收藏信息
  */
-export const GetCollections = (
-    filter?: CollectionFilter,
+export const GetUserSubjectEpisodeCollection = (
+    subject_id: number,
+    offset?: number,
     limit?: number,
-    offset?: number
-): Promise<CollectionListResponse> => {
-    const params = {
-        ...filter,
-        limit,
-        offset,
-    };
-    return bgmApi.get<CollectionListResponse>(`/v0/me/collections`, { params });
+    episode_type?: number
+): Promise<{ data: UserEpisodeCollection[] }> => {
+    const params = { offset, limit, episode_type };
+    return bgmApi.get<{ data: UserEpisodeCollection[] }>(`/v0/users/-/collections/${subject_id}/episodes`, { params });
 };
 
 /**
- * 搜索收藏 - Search Collections
- * @param keyword 搜索關鍵字 - Search keyword
- * @param filter 過濾條件 - Filter conditions (可選)
- * @param limit 每頁數量 - Items per page (可選)
- * @param offset 偏移量 - Offset (可選)
- * @returns Promise<CollectionListResponse> 搜索結果
+ * 修改章節收藏信息 - Patch User Subject Episode Collection
+ * @param subject_id 條目 ID - Subject ID
+ * @param data 章節收藏數據 - Episode collection data
+ * @returns Promise<void>
  */
-export const SearchCollections = (
-    keyword: string,
-    filter?: CollectionFilter,
-    limit?: number,
-    offset?: number
-): Promise<CollectionListResponse> => {
-    const params = {
-        keyword,
-        ...filter,
-        limit,
-        offset,
-    };
-    return bgmApi.get<CollectionListResponse>(`/v0/me/collections/search`, { params });
+export const PatchUserSubjectEpisodeCollection = (
+    subject_id: number,
+    data: {
+        episode_id: number[];
+        type: EpisodeCollectionType;
+    }
+): Promise<void> => {
+    return bgmApi.patch<void>(`/v0/users/-/collections/${subject_id}/episodes`, data);
 };
 
 /**
- * 按標籤獲取收藏 - Get Collections by Tag
- * @param tag 標籤名稱 - Tag name
- * @param limit 每頁數量 - Items per page (可選)
- * @param offset 偏移量 - Offset (可選)
- * @returns Promise<CollectionListResponse> 收藏列表響應
+ * 獲取單個章節收藏信息 - Get User Episode Collection
+ * @param episode_id 章節 ID - Episode ID
+ * @returns Promise<UserEpisodeCollection> 章節收藏信息
  */
-export const GetCollectionsByTag = (tag: string, limit?: number, offset?: number): Promise<CollectionListResponse> => {
-    const params = { tag, limit, offset };
-    return bgmApi.get<CollectionListResponse>(`/v0/me/collections/tags/${encodeURIComponent(tag)}`, { params });
+export const GetUserEpisodeCollection = (episode_id: number): Promise<UserEpisodeCollection> => {
+    return bgmApi.get<UserEpisodeCollection>(`/v0/users/-/collections/-/episodes/${episode_id}`);
 };
 
 /**
- * 獲取收藏標籤列表 - Get Collection Tags
- * @returns Promise<string[]> 標籤列表
+ * 更新章節收藏信息 - Put User Episode Collection
+ * @param episode_id 章節 ID - Episode ID
+ * @param data 章節收藏類型 - Episode collection type
+ * @returns Promise<void>
  */
-export const GetCollectionTags = (): Promise<string[]> => {
-    return bgmApi.get<string[]>(`/v0/me/collections/tags`);
+export const PutUserEpisodeCollection = (episode_id: number, data: { type: EpisodeCollectionType }): Promise<void> => {
+    return bgmApi.put<void>(`/v0/users/-/collections/-/episodes/${episode_id}`, data);
 };
 
-// ========== 收藏統計與分析 - Collection Statistics & Analysis ==========
+// ========== 角色收藏管理 - Character Collection Management ==========
 
 /**
- * 獲取收藏統計 - Get Collection Statistics
- * @returns Promise<{[key: string]: number}> 收藏統計數據
+ * 獲取用戶角色收藏列表 - Get User Character Collections
+ * @param username 用戶名 - Username
+ * @returns Promise<Paged_UserCharacterCollection> 用戶角色收藏列表
  */
-export const GetCollectionStatistics = (): Promise<{ [key: string]: number }> => {
-    return bgmApi.get<{ [key: string]: number }>(`/v0/me/collections/statistics`);
-};
-
-/**
- * 獲取收藏時間線 - Get Collection Timeline
- * @param year 年份 - Year (可選)
- * @param month 月份 - Month (可選)
- * @returns Promise<CollectionItem[]> 收藏時間線
- */
-export const GetCollectionTimeline = (year?: number, month?: number): Promise<CollectionItem[]> => {
-    const params = { year, month };
-    return bgmApi.get<CollectionItem[]>(`/v0/me/collections/timeline`, { params });
+export const GetUserCharacterCollections = (username: string): Promise<Paged_UserCharacterCollection> => {
+    return bgmApi.get<Paged_UserCharacterCollection>(`/v0/users/${username}/collections/-/characters`);
 };
 
 /**
- * 獲取收藏趨勢 - Get Collection Trends
- * @param period 時間段 - Time period ('week' | 'month' | 'year')
- * @returns Promise<{date: string; count: number}[]> 收藏趨勢數據
+ * 獲取用戶單個角色收藏信息 - Get User Character Collection
+ * @param username 用戶名 - Username
+ * @param character_id 角色 ID - Character ID
+ * @returns Promise<UserCharacterCollection> 用戶角色收藏信息
  */
-export const GetCollectionTrends = (
-    period: 'week' | 'month' | 'year' = 'month'
-): Promise<{ date: string; count: number }[]> => {
-    const params = { period };
-    return bgmApi.get<{ date: string; count: number }[]>(`/v0/me/collections/trends`, { params });
+export const GetUserCharacterCollection = (
+    username: string,
+    character_id: number
+): Promise<UserCharacterCollection> => {
+    return bgmApi.get<UserCharacterCollection>(`/v0/users/${username}/collections/-/characters/${character_id}`);
 };
 
-// ========== 收藏導入導出 - Collection Import/Export ==========
+// ========== 人物收藏管理 - Person Collection Management ==========
 
 /**
- * 導出收藏數據 - Export Collection Data
- * @param config 導出配置 - Export configuration
- * @returns Promise<string> 導出數據內容
+ * 獲取用戶人物收藏列表 - Get User Person Collections
+ * @param username 用戶名 - Username
+ * @returns Promise<Paged_UserPersonCollection> 用戶人物收藏列表
  */
-export const ExportCollections = (config: CollectionExport): Promise<string> => {
-    return bgmApi.post<string>(`/v0/me/collections/export`, config);
+export const GetUserPersonCollections = (username: string): Promise<Paged_UserPersonCollection> => {
+    return bgmApi.get<Paged_UserPersonCollection>(`/v0/users/${username}/collections/-/persons`);
 };
 
 /**
- * 導入收藏數據 - Import Collection Data
- * @param data 導入數據 - Import data
- * @param format 數據格式 - Data format
- * @returns Promise<BatchCollectionResponse> 導入結果
+ * 獲取用戶單個人物收藏信息 - Get User Person Collection
+ * @param username 用戶名 - Username
+ * @param person_id 人物 ID - Person ID
+ * @returns Promise<UserPersonCollection> 用戶人物收藏信息
  */
-export const ImportCollections = (data: string, format: 'json' | 'csv' | 'xml'): Promise<BatchCollectionResponse> => {
-    const requestData = { data, format };
-    return bgmApi.post<BatchCollectionResponse>(`/v0/me/collections/import`, requestData);
-};
-
-// ========== 收藏同步 - Collection Sync ==========
-
-/**
- * 同步第三方收藏數據 - Sync Third-party Collection Data
- * @param source 數據源 - Data source
- * @param credentials 認證信息 - Credentials
- * @returns Promise<BatchCollectionResponse> 同步結果
- */
-export const SyncCollections = (
-    source: 'mal' | 'anilist' | 'kitsu',
-    credentials: { [key: string]: string }
-): Promise<BatchCollectionResponse> => {
-    const data = { source, credentials };
-    return bgmApi.post<BatchCollectionResponse>(`/v0/me/collections/sync`, data);
+export const GetUserPersonCollection = (username: string, person_id: number): Promise<UserPersonCollection> => {
+    return bgmApi.get<UserPersonCollection>(`/v0/users/${username}/collections/-/persons/${person_id}`);
 };

@@ -1,4 +1,4 @@
-// 角色相關類型定義 - Character Related Types
+// 角色相關類型定義 - Character Related Type Definitions
 import { Images, CharacterType, CharacterRole } from './common';
 
 /**
@@ -12,19 +12,29 @@ export interface Character {
     /** 角色類型 - Character type */
     type: CharacterType;
     /** 角色圖片 - Character images */
-    images: Images;
+    images?: Images;
     /** 角色簡介 - Character summary */
     summary: string;
     /** 是否被鎖定 - Is locked */
     locked: boolean;
     /** 信息框原始內容 - Raw infobox content */
     infobox?: CharacterInfoboxItem[];
+    /** 性別 - Gender */
+    gender?: string;
+    /** 血型 - Blood type */
+    blood_type?: number;
+    /** 出生年份 - Birth year */
+    birth_year?: number;
+    /** 出生月份 - Birth month */
+    birth_mon?: number;
+    /** 出生日期 - Birth day */
+    birth_day?: number;
     /** 統計信息 - Statistics */
     stat?: CharacterStats;
 }
 
 /**
- * 角色詳細信息 - Detailed Character Information
+ * 角色詳細信息 - Character Detail Information
  */
 export interface CharacterDetail extends Character {
     /** 相關條目 - Related subjects */
@@ -54,7 +64,7 @@ export interface CharacterInfoboxValue {
 }
 
 /**
- * 角色統計信息 - Character Statistics
+ * 角色統計 - Character Statistics
  */
 export interface CharacterStats {
     /** 評論數 - Comments count */
@@ -92,19 +102,23 @@ export interface CharacterPerson {
     /** 人物類型 - Person type */
     type: number;
     /** 人物圖片 - Person images */
-    images: Images;
+    images?: Images;
     /** 人物職業 - Person career */
-    career: string[];
+    career?: string[];
     /** 條目 ID - Subject ID */
     subject_id: number;
+    /** 條目類型 - Subject type */
+    subject_type: number;
     /** 條目名稱 - Subject name */
     subject_name: string;
     /** 條目中文名稱 - Subject Chinese name */
     subject_name_cn: string;
+    /** 人物職位 - Person staff */
+    staff?: string;
 }
 
 /**
- * 角色收藏信息 - Character Collection Info
+ * 角色收藏 - Character Collection
  */
 export interface CharacterCollection {
     /** 角色 ID - Character ID */
@@ -129,4 +143,36 @@ export interface SubjectCharacterRelation {
     type: CharacterRole;
     /** 排序順序 - Order */
     order: number;
+}
+
+/**
+ * 分頁角色響應 - Paged Character Response
+ */
+export interface Paged_Character {
+    /** 總數 - Total count */
+    total: number;
+    /** 每頁限制 - Items per page limit */
+    limit: number;
+    /** 偏移量 - Offset */
+    offset: number;
+    /** 角色數據 - Character data */
+    data: Character[];
+}
+
+/**
+ * v0版本相關條目 - v0 Related Subject
+ */
+export interface v0_RelatedSubject {
+    /** 條目 ID - Subject ID */
+    id: number;
+    /** 條目類型 - Subject type */
+    type: number;
+    /** 人物職位 - Staff position */
+    staff: string;
+    /** 條目名稱 - Subject name */
+    name: string;
+    /** 條目中文名稱 - Subject Chinese name */
+    name_cn: string;
+    /** 條目圖片 - Subject image */
+    image?: string;
 }

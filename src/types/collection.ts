@@ -1,5 +1,5 @@
 // 收藏相關類型定義 - Collection Related Types
-import { Pagination, CollectionType, SubjectType, Images } from './common';
+import { Pagination, CollectionType, SubjectType } from './common';
 import { Subject } from './subject';
 import { User } from './user';
 
