@@ -1,1 +1,1 @@
-export { default  } from './rating-stars';
+export { default } from './rating-stars';

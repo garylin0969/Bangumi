@@ -9,13 +9,13 @@ const converter = Converter({ from: 'cn', to: 'tw' });
  * @returns 轉換後的繁體中文
  */
 export const convertToTraditional = (text: string): string => {
-  if (!text) return '';
-  try {
-    return converter(text);
-  } catch (error) {
-    console.warn('OpenCC conversion failed:', error);
-    return text; // 如果轉換失敗，返回原文
-  }
+    if (!text) return '';
+    try {
+        return converter(text);
+    } catch (error) {
+        console.warn('OpenCC conversion failed:', error);
+        return text; // 如果轉換失敗，返回原文
+    }
 };
 
 /**
@@ -24,17 +24,14 @@ export const convertToTraditional = (text: string): string => {
  * @param keys 需要轉換的屬性名稱陣列
  * @returns 轉換後的物件
  */
-export const convertObjectProperties = <T extends Record<string, any>>(
-  obj: T,
-  keys: (keyof T)[]
-): T => {
-  const converted = { ...obj };
-  keys.forEach(key => {
-    if (typeof converted[key] === 'string') {
-      converted[key] = convertToTraditional(converted[key] as string) as T[keyof T];
-    }
-  });
-  return converted;
+export const convertObjectProperties = <T extends Record<string, any>>(obj: T, keys: (keyof T)[]): T => {
+    const converted = { ...obj };
+    keys.forEach((key) => {
+        if (typeof converted[key] === 'string') {
+            converted[key] = convertToTraditional(converted[key] as string) as T[keyof T];
+        }
+    });
+    return converted;
 };
 
 /**
@@ -43,9 +40,6 @@ export const convertObjectProperties = <T extends Record<string, any>>(
  * @param keys 需要轉換的屬性名稱陣列
  * @returns 轉換後的陣列
  */
-export const convertArrayProperties = <T extends Record<string, any>>(
-  array: T[],
-  keys: (keyof T)[]
-): T[] => {
-  return array.map(item => convertObjectProperties(item, keys));
+export const convertArrayProperties = <T extends Record<string, any>>(array: T[], keys: (keyof T)[]): T[] => {
+    return array.map((item) => convertObjectProperties(item, keys));
 };
