@@ -12,7 +12,7 @@ interface SubjectCardProps {
   showSummary?: boolean;
 }
 
-export const SubjectCard = ({
+ const SubjectCard = ({
   subject,
   className,
   showRating = true,
@@ -64,3 +64,5 @@ export const SubjectCard = ({
     </Link>
   );
 };
+
+export default SubjectCard;
