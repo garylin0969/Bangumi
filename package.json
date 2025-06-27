@@ -22,6 +22,7 @@
     "opencc-js": "^1.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.58.1",
     "react-router-dom": "^7.6.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11"
@@ -30,6 +31,7 @@
     "@eslint/js": "^9.29.0",
     "@tauri-apps/cli": "^2",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^24.0.4",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
