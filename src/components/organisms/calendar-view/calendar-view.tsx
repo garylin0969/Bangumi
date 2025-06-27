@@ -6,7 +6,7 @@ import { convertToTraditional } from '@/utils/opencc';
 
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 
-export const CalendarView = () => {
+ const CalendarView = () => {
   const { data: calendar, isLoading, error } = useQuery({
     queryKey: ['calendar'],
     queryFn: bangumiApi.getCalendar,
@@ -65,3 +65,5 @@ export const CalendarView = () => {
     </div>
   );
 };
+
+export default CalendarView;
