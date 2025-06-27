@@ -6,7 +6,7 @@ const API_BASE_URL = 'https://api.bgm.tv';
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'User-Agent': 'fan-yu/0.1.0 (https://github.com/your-username/fan-yu)',
+    'User-Agent': 'Bangumi/0.1.0 (https://github.com/your-username/Bangumi)',
     'Content-Type': 'application/json',
   },
 });

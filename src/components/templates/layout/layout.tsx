@@ -24,7 +24,7 @@ const navItems = [
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2">
               <div className="text-2xl font-bold text-blue-600">
-                番語
+                Bangumi
               </div>
             </Link>
 
