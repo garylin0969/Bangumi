@@ -3,7 +3,7 @@ import { ImageWithFallback } from '@/components/atoms/image-with-fallback';
 import { RatingStars } from '@/components/atoms/rating-stars';
 import { Subject } from '@/lib/api';
 import { convertToTraditional } from '@/lib/opencc';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shadcn';
 
 interface SubjectCardProps {
   subject: Subject;

@@ -1,5 +1,5 @@
+import { cn } from '@/utils/shadcn';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 
 interface ImageWithFallbackProps {
   src: string;

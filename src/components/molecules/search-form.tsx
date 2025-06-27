@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shadcn';
 
 interface SearchFormData {
   keyword: string;

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, Calendar, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shadcn';
 
 interface LayoutProps {
   children: ReactNode;
