@@ -20,7 +20,9 @@ export const GetUser = (username: string): Promise<User> => {
  * @returns Promise<string> 頭像URL (通過302重定向)
  */
 export const GetUserAvatar = (username: string, type: 'small' | 'large' | 'medium'): Promise<string> => {
-    return bgmApi.get<string>(`/v0/users/${username}/avatar?type=${type}`);
+    return bgmApi.get<string>(`/v0/users/${username}/avatar`, {
+        params: { type },
+    });
 };
 
 /**
