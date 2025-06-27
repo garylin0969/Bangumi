@@ -1,4 +1,4 @@
-import type { Subject, Character, Person, SearchResult, EpisodesResponse } from '@/types/bangumi';
+import type { Subject, Character, Person, SearchResult, EpisodesResponse } from '@/types';
 import bgmApi from './bgm-api';
 
 // 獲取條目信息

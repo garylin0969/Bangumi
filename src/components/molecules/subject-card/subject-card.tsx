@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import RatingStars from '@/components/atoms/rating-stars';
-import { Subject } from '@/types/bangumi';
+import { Subject } from '@/types';
 import { convertToTraditional } from '@/utils/opencc';
 import { cn } from '@/utils/shadcn';
 

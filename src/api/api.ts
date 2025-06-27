@@ -1,24 +1,5 @@
-import type {
-    Subject,
-    Character,
-    Person,
-    CalendarItem,
-    SearchResult,
-    User,
-    UserCollectionsResponse,
-    EpisodesResponse,
-} from '@/types/bangumi';
+import type { Subject, Character, Person, CalendarItem, User, UserCollectionsResponse } from '@/types';
 import bgmApi from './bgm-api';
-
-// 獲取角色信息
-export const GetCharacter = (id: number): Promise<Character> => {
-    return bgmApi.get<Character>(`/v0/characters/${id}`);
-};
-
-// 獲取角色相關條目
-export const GetCharacterSubjects = (id: number): Promise<Subject[]> => {
-    return bgmApi.get<Subject[]>(`/v0/characters/${id}/subjects`);
-};
 
 // 獲取人物信息
 export const GetPerson = (id: number): Promise<Person> => {
