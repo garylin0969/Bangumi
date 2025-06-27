@@ -1,106 +1,19 @@
 import bgmApi from './bgm-api';
-
-// 類型定義
-export interface Subject {
-  id: number;
-  type: number;
-  name: string;
-  name_cn: string;
-  summary: string;
-  air_date: string;
-  air_weekday: number;
-  images: {
-    large: string;
-    common: string;
-    medium: string;
-    small: string;
-    grid: string;
-  };
-  collection: {
-    wish: number;
-    collect: number;
-    doing: number;
-    on_hold: number;
-    dropped: number;
-  };
-  rating: {
-    total: number;
-    count: {
-      1: number;
-      2: number;
-      3: number;
-      4: number;
-      5: number;
-      6: number;
-      7: number;
-      8: number;
-      9: number;
-      10: number;
-    };
-    score: number;
-  };
-  tags: Array<{
-    name: string;
-    count: number;
-  }>;
-}
-
-export interface Character {
-  id: number;
-  name: string;
-  type: number;
-  images: {
-    large: string;
-    medium: string;
-    small: string;
-    grid: string;
-  };
-  summary: string;
-  locked: boolean;
-}
-
-export interface Person {
-  id: number;
-  name: string;
-  type: number;
-  career: string[];
-  images: {
-    large: string;
-    medium: string;
-    small: string;
-    grid: string;
-  };
-  summary: string;
-  locked: boolean;
-}
-
-export interface Episode {
-  id: number;
-  type: number;
-  name: string;
-  name_cn: string;
-  sort: number;
-  ep: number;
-  airdate: string;
-  comment: number;
-  duration: string;
-  desc: string;
-}
-
-export interface CalendarItem {
-  weekday: {
-    en: string;
-    cn: string;
-    ja: string;
-    id: number;
-  };
-  items: Subject[];
-}
-
-export interface SearchResult {
-  results: number;
-  list: Subject[];
-}
+import type {
+  Subject,
+  Character,
+  Person,
+  Episode,
+  CalendarItem,
+  SearchResult,
+  User,
+  UserCollection,
+  UserCollectionsResponse,
+  EpisodesResponse,
+  SUBJECT_TYPES,
+  COLLECTION_TYPES,
+  EPISODE_TYPES,
+} from '../types/bangumi';
 
 // API 函數
 export const bangumiApi = {
@@ -117,23 +30,13 @@ export const bangumiApi = {
     bgmApi.get<Person[]>(`/v0/subjects/${id}/persons`),
 
   // 獲取條目章節
-  getSubjectEpisodes: (id: number, type?: number, limit?: number, offset?: number): Promise<{
-    total: number;
-    limit: number;
-    offset: number;
-    data: Episode[];
-  }> => {
+  getSubjectEpisodes: (id: number, type?: number, limit?: number, offset?: number): Promise<EpisodesResponse> => {
     const params = new URLSearchParams();
     if (type !== undefined) params.append('type', type.toString());
     if (limit !== undefined) params.append('limit', limit.toString());
     if (offset !== undefined) params.append('offset', offset.toString());
 
-    return bgmApi.get<{
-      total: number;
-      limit: number;
-      offset: number;
-      data: Episode[];
-    }>(`/v0/subjects/${id}/episodes?${params.toString()}`);
+    return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes?${params.toString()}`);
   },
 
   // 獲取角色信息
@@ -173,112 +76,20 @@ export const bangumiApi = {
   },
 
   // 獲取用戶基本信息（公開部分）
-  getUser: (username: string): Promise<{
-    id: number;
-    username: string;
-    nickname: string;
-    avatar: {
-      large: string;
-      medium: string;
-      small: string;
-    };
-    sign: string;
-    joindate: string;
-  }> =>
-    bgmApi.get<{
-      id: number;
-      username: string;
-      nickname: string;
-      avatar: {
-        large: string;
-        medium: string;
-        small: string;
-      };
-      sign: string;
-      joindate: string;
-    }>(`/v0/users/${username}`),
+  getUser: (username: string): Promise<User> =>
+    bgmApi.get<User>(`/v0/users/${username}`),
 
   // 獲取用戶收藏（公開部分）
-  getUserCollections: (username: string, subject_type?: number, type?: number, limit?: number, offset?: number): Promise<{
-    total: number;
-    limit: number;
-    offset: number;
-    data: Array<{
-      subject_id: number;
-      subject_type: number;
-      type: number;
-      name: string;
-      name_cn: string;
-      images: {
-        large: string;
-        common: string;
-        medium: string;
-        small: string;
-        grid: string;
-      };
-      comment: string;
-      tags: string[];
-      rating: number;
-      private: boolean;
-    }>;
-  }> => {
+  getUserCollections: (username: string, subject_type?: number, type?: number, limit?: number, offset?: number): Promise<UserCollectionsResponse> => {
     const params = new URLSearchParams();
     if (subject_type !== undefined) params.append('subject_type', subject_type.toString());
     if (type !== undefined) params.append('type', type.toString());
     if (limit !== undefined) params.append('limit', limit.toString());
     if (offset !== undefined) params.append('offset', offset.toString());
 
-    return bgmApi.get<{
-      total: number;
-      limit: number;
-      offset: number;
-      data: Array<{
-        subject_id: number;
-        subject_type: number;
-        type: number;
-        name: string;
-        name_cn: string;
-        images: {
-          large: string;
-          common: string;
-          medium: string;
-          small: string;
-          grid: string;
-        };
-        comment: string;
-        tags: string[];
-        rating: number;
-        private: boolean;
-      }>;
-    }>(`/v0/users/${username}/collections?${params.toString()}`);
+    return bgmApi.get<UserCollectionsResponse>(`/v0/users/${username}/collections?${params.toString()}`);
   },
 };
 
-// 條目類型常量
-export const SUBJECT_TYPES = {
-  BOOK: 1,
-  ANIME: 2,
-  MUSIC: 3,
-  GAME: 4,
-  REAL: 6,
-} as const;
-
-// 收藏狀態常量
-export const COLLECTION_TYPES = {
-  WISH: 1,
-  COLLECT: 2,
-  DOING: 3,
-  ON_HOLD: 4,
-  DROPPED: 5,
-} as const;
-
-// 章節類型常量
-export const EPISODE_TYPES = {
-  MAIN: 0,
-  SPECIAL: 1,
-  OP: 2,
-  ED: 3,
-  TRAILER: 4,
-  MAD: 5,
-  OTHER: 6,
-} as const;
+// 重新導出常量以保持 API 一致性
+export { SUBJECT_TYPES, COLLECTION_TYPES, EPISODE_TYPES };
