@@ -32,7 +32,7 @@ export const GetSubjectEpisodes = (id: number, type?: number, limit?: number, of
   if (limit !== undefined) params.append('limit', limit.toString());
   if (offset !== undefined) params.append('offset', offset.toString());
 
-  return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes?${params.toString()}`)
+  return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes`,{params})
 }
 
 // 獲取角色信息
@@ -74,7 +74,7 @@ export const SearchSubjects = (keyword: string, type?: number, responseGroup?: '
   if (start !== undefined) params.append('start', start.toString());
   if (max_results !== undefined) params.append('max_results', max_results.toString());
 
-  return bgmApi.get<SearchResult>(`/search/subject/${encodeURIComponent(keyword)}?${params.toString()}`);
+  return bgmApi.get<SearchResult>(`/search/subject/${encodeURIComponent(keyword)}`,{params});
 }
 
 // 獲取用戶基本信息（公開部分）
@@ -90,5 +90,5 @@ export const GetUserCollections = (username: string, subject_type?: number, type
   if (limit !== undefined) params.append('limit', limit.toString());
   if (offset !== undefined) params.append('offset', offset.toString());
 
-  return bgmApi.get<UserCollectionsResponse>(`/v0/users/${username}/collections?${params.toString()}`);
+  return bgmApi.get<UserCollectionsResponse>(`/v0/users/${username}/collections`,{params});
 };
