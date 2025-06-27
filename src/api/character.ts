@@ -16,14 +16,16 @@ export const GetCharacter = (character_id: number): Promise<Character> => {
 /**
  * 獲取角色圖片 - Get Character Image
  * @param character_id 角色 ID - Character ID
- * @param type 圖片類型 - Image type (small|grid|large|medium)
+ * @param type 圖片類型 - Image type
  * @returns Promise<string> 圖片URL (通過302重定向)
  */
 export const GetCharacterImage = (
     character_id: number,
     type: 'small' | 'grid' | 'large' | 'medium'
 ): Promise<string> => {
-    return bgmApi.get<string>(`/v0/characters/${character_id}/image?type=${type}`);
+    return bgmApi.get<string>(`/v0/characters/${character_id}/image`, {
+        params: { type },
+    });
 };
 
 // ========== 角色關聯內容 - Character Related Content ==========
@@ -50,18 +52,28 @@ export const GetCharacterPersons = (character_id: number): Promise<CharacterPers
 
 /**
  * 搜索角色 - Search Characters
- * @param params 搜索參數 - Search parameters
+ * @param body 搜索參數 - Search parameters
+ * @param params 查詢參數 - Query parameters
  * @returns Promise<Paged_Character> 搜索結果
  */
-export const SearchCharacters = (params: {
-    keyword: string;
-    filter?: {
-        nsfw?: boolean;
-    };
-    limit?: number;
-    offset?: number;
-}): Promise<Paged_Character> => {
-    return bgmApi.post<Paged_Character>('/v0/search/characters', params);
+export const SearchCharacters = (
+    body: {
+        /** 搜索關鍵字 - Search keyword (必填) */
+        keyword: string;
+        /** 篩選條件 - Filter conditions (可選) */
+        filter?: {
+            /** 是否包含NSFW - Include NSFW */
+            nsfw?: boolean;
+        };
+    },
+    params?: {
+        /** 每頁數量 - Items per page (可選) */
+        limit?: number;
+        /** 偏移量 - Offset (可選) */
+        offset?: number;
+    }
+): Promise<Paged_Character> => {
+    return bgmApi.post<Paged_Character>('/v0/search/characters', body, { params });
 };
 
 // ========== 角色收藏 - Character Collection ==========

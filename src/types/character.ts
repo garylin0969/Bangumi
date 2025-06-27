@@ -1,8 +1,34 @@
 // 角色相關類型定義 - Character Related Type Definitions
-import { Images, CharacterType, CharacterRole } from './common';
+import { CharacterType, SubjectType } from './common';
+
+// ========== 基本類型 - Basic Types ==========
 
 /**
- * 角色基本信息 - Basic Character Information
+ * 人物圖片 - Person Images (對應 API schema PersonImages)
+ */
+export interface PersonImages {
+    /** 大圖 - Large image */
+    large: string;
+    /** 中圖 - Medium image */
+    medium: string;
+    /** 小圖 - Small image */
+    small: string;
+    /** 格子圖 - Grid image */
+    grid: string;
+}
+
+/**
+ * 統計信息 - Statistics (對應 API schema Stat)
+ */
+export interface Stat {
+    /** 評論數 - Comments count */
+    comments: number;
+    /** 收藏數 - Collections count */
+    collects: number;
+}
+
+/**
+ * 角色基本信息 - Basic Character Information (對應 API schema Character)
  */
 export interface Character {
     /** 角色 ID - Character ID */
@@ -11,30 +37,122 @@ export interface Character {
     name: string;
     /** 角色類型 - Character type */
     type: CharacterType;
-    /** 角色圖片 - Character images */
-    images?: Images;
     /** 角色簡介 - Character summary */
     summary: string;
     /** 是否被鎖定 - Is locked */
     locked: boolean;
+    /** 統計信息 - Statistics */
+    stat: Stat;
+    /** 角色圖片 - Character images */
+    images?: PersonImages;
     /** 信息框原始內容 - Raw infobox content */
-    infobox?: CharacterInfoboxItem[];
+    infobox?: InfoboxItem[];
     /** 性別 - Gender */
     gender?: string;
     /** 血型 - Blood type */
-    blood_type?: number;
+    blood_type?: BloodType;
     /** 出生年份 - Birth year */
     birth_year?: number;
     /** 出生月份 - Birth month */
     birth_mon?: number;
     /** 出生日期 - Birth day */
     birth_day?: number;
-    /** 統計信息 - Statistics */
-    stat?: CharacterStats;
 }
 
 /**
- * 角色詳細信息 - Character Detail Information
+ * 血型枚舉 - Blood Type (對應 API schema BloodType)
+ */
+export enum BloodType {
+    /** A型 - Type A */
+    A = 1,
+    /** B型 - Type B */
+    B = 2,
+    /** AB型 - Type AB */
+    AB = 3,
+    /** O型 - Type O */
+    O = 4,
+}
+
+/**
+ * 信息框項目 - Infobox Item
+ */
+export interface InfoboxItem {
+    /** 項目鍵 - Item key */
+    key: string;
+    /** 項目值 - Item value */
+    value: string | InfoboxValue[];
+}
+
+/**
+ * 信息框值 - Infobox Value
+ */
+export interface InfoboxValue {
+    /** 值內容 - Value content */
+    v: string;
+    /** 值鏈接 - Value link */
+    k?: string;
+}
+
+/**
+ * 角色相關人物 - Character Related Person (對應 API schema CharacterPerson)
+ */
+export interface CharacterPerson {
+    /** 人物 ID - Person ID */
+    id: number;
+    /** 人物名稱 - Person name */
+    name: string;
+    /** 人物類型 - Person type */
+    type: CharacterType;
+    /** 條目 ID - Subject ID */
+    subject_id: number;
+    /** 條目類型 - Subject type */
+    subject_type: SubjectType;
+    /** 條目名稱 - Subject name */
+    subject_name: string;
+    /** 條目中文名稱 - Subject Chinese name */
+    subject_name_cn: string;
+    /** 人物圖片 - Person images */
+    images?: PersonImages;
+    /** 人物職位 - Person staff */
+    staff?: string;
+}
+
+/**
+ * v0版本相關條目 - v0 Related Subject (對應 API schema v0_RelatedSubject)
+ */
+export interface v0_RelatedSubject {
+    /** 條目 ID - Subject ID */
+    id: number;
+    /** 條目類型 - Subject type */
+    type: SubjectType;
+    /** 人物職位 - Staff position */
+    staff: string;
+    /** 條目名稱 - Subject name */
+    name: string;
+    /** 條目中文名稱 - Subject Chinese name */
+    name_cn: string;
+    /** 條目圖片 - Subject image */
+    image?: string;
+}
+
+/**
+ * 分頁角色響應 - Paged Character Response (對應 API schema Paged_Character)
+ */
+export interface Paged_Character {
+    /** 總數 - Total count */
+    total: number;
+    /** 每頁限制 - Items per page limit */
+    limit: number;
+    /** 偏移量 - Offset */
+    offset: number;
+    /** 角色數據 - Character data */
+    data: Character[];
+}
+
+// ========== 廢棄的類型定義 (保持向後兼容) - Deprecated Types ==========
+
+/**
+ * @deprecated 使用 Character 替代
  */
 export interface CharacterDetail extends Character {
     /** 相關條目 - Related subjects */
@@ -44,7 +162,7 @@ export interface CharacterDetail extends Character {
 }
 
 /**
- * 角色信息框項目 - Character Infobox Item
+ * @deprecated 使用 InfoboxItem 替代
  */
 export interface CharacterInfoboxItem {
     /** 項目鍵 - Item key */
@@ -54,7 +172,7 @@ export interface CharacterInfoboxItem {
 }
 
 /**
- * 角色信息框值 - Character Infobox Value
+ * @deprecated 使用 InfoboxValue 替代
  */
 export interface CharacterInfoboxValue {
     /** 值內容 - Value content */
@@ -64,7 +182,7 @@ export interface CharacterInfoboxValue {
 }
 
 /**
- * 角色統計 - Character Statistics
+ * @deprecated 使用 Stat 替代
  */
 export interface CharacterStats {
     /** 評論數 - Comments count */
@@ -74,7 +192,7 @@ export interface CharacterStats {
 }
 
 /**
- * 角色相關條目 - Character Related Subject
+ * @deprecated 使用 v0_RelatedSubject 替代
  */
 export interface CharacterSubject {
     /** 條目 ID - Subject ID */
@@ -91,31 +209,7 @@ export interface CharacterSubject {
     staff: string;
 }
 
-/**
- * 角色相關人物 - Character Related Person
- */
-export interface CharacterPerson {
-    /** 人物 ID - Person ID */
-    id: number;
-    /** 人物名稱 - Person name */
-    name: string;
-    /** 人物類型 - Person type */
-    type: number;
-    /** 人物圖片 - Person images */
-    images?: Images;
-    /** 人物職業 - Person career */
-    career?: string[];
-    /** 條目 ID - Subject ID */
-    subject_id: number;
-    /** 條目類型 - Subject type */
-    subject_type: number;
-    /** 條目名稱 - Subject name */
-    subject_name: string;
-    /** 條目中文名稱 - Subject Chinese name */
-    subject_name_cn: string;
-    /** 人物職位 - Person staff */
-    staff?: string;
-}
+// ========== 其他輔助類型 - Helper Types ==========
 
 /**
  * 角色收藏 - Character Collection
@@ -140,39 +234,7 @@ export interface SubjectCharacterRelation {
     /** 條目 ID - Subject ID */
     subject_id: number;
     /** 角色在條目中的類型 - Character role type */
-    type: CharacterRole;
+    type: number;
     /** 排序順序 - Order */
     order: number;
-}
-
-/**
- * 分頁角色響應 - Paged Character Response
- */
-export interface Paged_Character {
-    /** 總數 - Total count */
-    total: number;
-    /** 每頁限制 - Items per page limit */
-    limit: number;
-    /** 偏移量 - Offset */
-    offset: number;
-    /** 角色數據 - Character data */
-    data: Character[];
-}
-
-/**
- * v0版本相關條目 - v0 Related Subject
- */
-export interface v0_RelatedSubject {
-    /** 條目 ID - Subject ID */
-    id: number;
-    /** 條目類型 - Subject type */
-    type: number;
-    /** 人物職位 - Staff position */
-    staff: string;
-    /** 條目名稱 - Subject name */
-    name: string;
-    /** 條目中文名稱 - Subject Chinese name */
-    name_cn: string;
-    /** 條目圖片 - Subject image */
-    image?: string;
 }

@@ -96,7 +96,7 @@ export const GetSubjectRelations = (subject_id: number): Promise<v0_subject_rela
 /**
  * 條目搜索 - Search Subjects
  * @param body 搜索參數 - Search parameters
- * @param queryParams 查詢參數 - Query parameters
+ * @param params 查詢參數 - Query parameters
  * @returns Promise<Paged_Subject> 搜索結果
  */
 export const SearchSubjects = (
@@ -123,20 +123,13 @@ export const SearchSubjects = (
             nsfw?: boolean;
         };
     },
-    queryParams?: {
+    params?: {
         /** 每頁數量 - Items per page (可選) */
         limit?: number;
         /** 偏移量 - Offset (可選) */
         offset?: number;
     }
 ): Promise<Paged_Subject> => {
-    const params = queryParams
-        ? {
-              limit: queryParams.limit,
-              offset: queryParams.offset,
-          }
-        : {};
-
     return bgmApi.post<Paged_Subject>('/v0/search/subjects', body, { params });
 };
 
