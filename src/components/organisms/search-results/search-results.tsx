@@ -10,7 +10,7 @@ interface SearchFormData {
   type?: number;
 }
 
-export const SearchResults = () => {
+ const SearchResults = () => {
   const [searchParams, setSearchParams] = useState<SearchFormData | null>(null);
 
   const { data: searchResults, isLoading, error } = useQuery({
@@ -83,3 +83,5 @@ export const SearchResults = () => {
     </div>
   );
 };
+
+export default SearchResults;
