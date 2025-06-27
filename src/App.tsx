@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Layout } from '@/components/templates/layout';
 import CalendarView from '@/components/organisms/calendar-view';
-import { SearchResults } from '@/components/organisms/search-results';
+import SearchResults from '@/components/organisms/search-results';
 import { SubjectDetail } from '@/components/templates/subject-detail';
 
 // 創建 QueryClient
