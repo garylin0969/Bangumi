@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import RatingStars from '@/components/atoms/rating-stars';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
-import { bangumiApi, SUBJECT_TYPES } from '@/lib/api';
+import { bangumiApi, SUBJECT_TYPES } from '@/api/api';
 import { convertToTraditional } from '@/utils/opencc';
 
 const getSubjectTypeName = (type: number): string => {
