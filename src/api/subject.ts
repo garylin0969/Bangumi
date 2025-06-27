@@ -1,5 +1,10 @@
-import type { Subject, Character, Person, SearchResult, EpisodesResponse } from '@/types';
+import type { CalendarItem, Subject, Character, Person, SearchResult, EpisodesResponse } from '@/types';
 import bgmApi from './bgm-api';
+
+// 獲取每日放送
+export const GetCalendar = (): Promise<CalendarItem[]> => {
+    return bgmApi.get<CalendarItem[]>('/calendar');
+};
 
 // 獲取條目信息
 export const GetSubject = (id: number): Promise<Subject> => {
