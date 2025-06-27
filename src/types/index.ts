@@ -3,4 +3,3 @@ export * from './subject';
 export * from './character';
 export * from './person';
 export * from './user';
-export * from './constants';

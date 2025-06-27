@@ -4,7 +4,7 @@ import { GetSubject, GetSubjectCharacters, GetSubjectEpisodes } from '@/api/subj
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import RatingStars from '@/components/atoms/rating-stars';
-import { SUBJECT_TYPES } from '@/types';
+import { SUBJECT_TYPES } from '@/constants';
 import { convertToTraditional } from '@/utils/opencc';
 
 const getSubjectTypeName = (type: number): string => {
