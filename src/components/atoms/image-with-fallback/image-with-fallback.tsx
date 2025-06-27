@@ -9,7 +9,7 @@ interface ImageWithFallbackProps {
   onError?: () => void;
 }
 
-export const ImageWithFallback = ({
+ const ImageWithFallback = ({
   src,
   alt,
   fallback = '/placeholder-image.png',
@@ -37,3 +37,5 @@ export const ImageWithFallback = ({
     />
   );
 };
+
+export default ImageWithFallback;

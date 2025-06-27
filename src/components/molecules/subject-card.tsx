@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ImageWithFallback } from '@/components/atoms/image-with-fallback';
+import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import { RatingStars } from '@/components/atoms/rating-stars';
 import { Subject } from '@/lib/api';
 import { convertToTraditional } from '@/utils/opencc';

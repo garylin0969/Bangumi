@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/atoms/loading-spinner';
 import { RatingStars } from '@/components/atoms/rating-stars';
-import { ImageWithFallback } from '@/components/atoms/image-with-fallback';
+import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import { bangumiApi, SUBJECT_TYPES } from '@/lib/api';
 import { convertToTraditional } from '@/utils/opencc';
 
