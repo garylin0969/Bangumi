@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { GetSubject, GetSubjectCharacters, GetSubjectEpisodes } from '@/api/subject';
+import { GetSubject, GetSubjectCharacters, GetSubjectPersons } from '@/api/subject';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import RatingStars from '@/components/atoms/rating-stars';
@@ -38,9 +38,9 @@ const SubjectDetail = () => {
         enabled: !!subjectId,
     });
 
-    const { data: episodes, isLoading: episodesLoading } = useQuery({
-        queryKey: ['subject-episodes', subjectId],
-        queryFn: () => GetSubjectEpisodes(subjectId, 0, 20, 0),
+    const { data: persons, isLoading: personsLoading } = useQuery({
+        queryKey: ['subject-persons', subjectId],
+        queryFn: () => GetSubjectPersons(subjectId),
         enabled: !!subjectId,
     });
 
@@ -88,13 +88,13 @@ const SubjectDetail = () => {
                             <span className="rounded bg-blue-100 px-2 py-1 text-blue-800">
                                 {getSubjectTypeName(subject.type)}
                             </span>
-                            {subject.air_date && <span>首播：{subject.air_date}</span>}
+                            {subject.date && <span>首播：{subject.date}</span>}
                         </div>
 
-                        {subject.rating?.score > 0 && (
+                        {subject.rating?.score && subject.rating.score > 0 && (
                             <div>
                                 <RatingStars rating={subject.rating.score} size="lg" />
-                                <p className="mt-1 text-sm text-gray-600">共 {subject.rating.total} 人評分</p>
+                                <p className="mt-1 text-sm text-gray-600">共 {subject.rating.total || 0} 人評分</p>
                             </div>
                         )}
 
@@ -181,7 +181,7 @@ const SubjectDetail = () => {
             )}
 
             {/* 章節列表 */}
-            {episodesLoading ? (
+            {personsLoading ? (
                 <div className="rounded-lg bg-white p-6 shadow-md">
                     <h2 className="mb-4 text-xl font-semibold text-gray-800">章節</h2>
                     <div className="flex justify-center py-4">
@@ -189,36 +189,30 @@ const SubjectDetail = () => {
                     </div>
                 </div>
             ) : (
-                episodes &&
-                episodes.data.length > 0 && (
+                persons &&
+                persons.length > 0 && (
                     <div className="rounded-lg bg-white p-6 shadow-md">
-                        <h2 className="mb-4 text-xl font-semibold text-gray-800">章節 ({episodes.total})</h2>
+                        <h2 className="mb-4 text-xl font-semibold text-gray-800">章節 ({persons.length})</h2>
                         <div className="space-y-2">
-                            {episodes.data.map((episode) => (
+                            {persons.map((person) => (
                                 <div
-                                    key={episode.id}
+                                    key={person.id}
                                     className="flex items-center rounded-lg bg-gray-50 p-3 transition-colors hover:bg-gray-100"
                                 >
-                                    <div className="w-16 flex-shrink-0 text-center">
-                                        <span className="text-sm font-medium text-gray-600">
-                                            {episode.sort || episode.ep}
-                                        </span>
-                                    </div>
-                                    <div className="min-w-0 flex-1">
+                                    <div className="flex-1">
                                         <p className="truncate text-sm font-medium text-gray-900">
-                                            {convertToTraditional(episode.name_cn || episode.name)}
+                                            {convertToTraditional(person.name)}
                                         </p>
-                                        {episode.airdate && <p className="text-xs text-gray-500">{episode.airdate}</p>}
                                     </div>
-                                    {episode.duration && (
-                                        <div className="flex-shrink-0 text-xs text-gray-500">{episode.duration}</div>
-                                    )}
+                                    <div className="flex-shrink-0 text-center">
+                                        <span className="text-sm font-medium text-gray-600">{person.type}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        {episodes.total > episodes.data.length && (
+                        {persons.length > persons.length && (
                             <p className="mt-4 text-center text-gray-600">
-                                顯示 {episodes.data.length} / {episodes.total} 章節
+                                顯示 {persons.length} / {persons.length} 章節
                             </p>
                         )}
                     </div>

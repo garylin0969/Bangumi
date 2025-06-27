@@ -21,7 +21,15 @@ const SearchResults = () => {
         queryKey: ['search', searchParams],
         queryFn: () =>
             searchParams
-                ? SearchSubjects(searchParams.keyword, searchParams.type, 'large', 0, 25)
+                ? SearchSubjects(
+                      {
+                          keyword: searchParams.keyword,
+                      },
+                      {
+                          limit: 25,
+                          offset: 0,
+                      }
+                  )
                 : Promise.resolve(null),
         enabled: !!searchParams,
     });
@@ -53,14 +61,14 @@ const SearchResults = () => {
                 <div className="rounded-lg bg-white p-6 shadow-md">
                     <div className="mb-4 flex items-center justify-between">
                         <h2 className="text-xl font-semibold text-gray-800">搜尋結果</h2>
-                        <span className="text-sm text-gray-600">共找到 {searchResults.results} 個結果</span>
+                        <span className="text-sm text-gray-600">共找到 {searchResults.total} 個結果</span>
                     </div>
 
-                    {searchResults.list.length === 0 ? (
+                    {searchResults.data.length === 0 ? (
                         <p className="py-8 text-center text-gray-500">未找到相關結果</p>
                     ) : (
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {searchResults.list.map((subject) => (
+                            {searchResults.data.map((subject) => (
                                 <SubjectCard key={subject.id} subject={subject} showRating={true} showSummary={true} />
                             ))}
                         </div>

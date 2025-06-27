@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import RatingStars from '@/components/atoms/rating-stars';
-import { Subject } from '@/types';
+import { CalendarSubject, Subject } from '@/types';
 import { convertToTraditional } from '@/utils/opencc';
 import { cn } from '@/utils/shadcn';
 
 interface SubjectCardProps {
-    subject: Subject;
+    subject: Subject | CalendarSubject;
     className?: string;
     showRating?: boolean;
     showSummary?: boolean;
@@ -35,7 +35,7 @@ const SubjectCard = ({ subject, className, showRating = true, showSummary = fals
                 <div className="flex-1 p-4">
                     <h3 className="mb-2 line-clamp-2 font-semibold text-gray-900">{displayName}</h3>
 
-                    {showRating && subject.rating?.score > 0 && (
+                    {showRating && subject?.rating?.score && subject.rating.score > 0 && (
                         <div className="mb-2">
                             <RatingStars rating={subject.rating.score} size="sm" />
                         </div>
@@ -46,7 +46,7 @@ const SubjectCard = ({ subject, className, showRating = true, showSummary = fals
                     )}
 
                     <div className="mt-2 text-xs text-gray-500">
-                        {subject.air_date && <span>{subject.air_date}</span>}
+                        {'air_date' in subject && subject.air_date && <span>{subject.air_date}</span>}
                     </div>
                 </div>
             </div>
