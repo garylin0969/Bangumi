@@ -9,7 +9,7 @@ interface RatingStarsProps {
   className?: string;
 }
 
-export const RatingStars = ({
+ const RatingStars = ({
   rating,
   maxRating = 10,
   size = 'md',
@@ -48,3 +48,5 @@ export const RatingStars = ({
     </div>
   );
 };
+
+export default RatingStars;
