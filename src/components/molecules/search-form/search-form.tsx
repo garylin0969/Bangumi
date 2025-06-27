@@ -23,7 +23,7 @@ const SUBJECT_TYPE_OPTIONS = [
   { value: 6, label: '真人' },
 ];
 
-export const SearchForm = ({
+ const SearchForm = ({
   onSearch,
   className,
   placeholder = '搜尋條目...',
@@ -77,3 +77,5 @@ export const SearchForm = ({
     </form>
   );
 };
+
+export default SearchForm;
