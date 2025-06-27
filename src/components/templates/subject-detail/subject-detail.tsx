@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import RatingStars from '@/components/atoms/rating-stars';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
-import { bangumiApi } from '@/api/api';
+import { GetSubject, GetSubjectCharacters, GetSubjectEpisodes } from '@/api/api';
 import { SUBJECT_TYPES } from '@/types/bangumi';
 import { convertToTraditional } from '@/utils/opencc';
 
@@ -24,19 +24,19 @@ const getSubjectTypeName = (type: number): string => {
 
   const { data: subject, isLoading: subjectLoading, error: subjectError } = useQuery({
     queryKey: ['subject', subjectId],
-    queryFn: () => bangumiApi.getSubject(subjectId),
+    queryFn: () => GetSubject(subjectId),
     enabled: !!subjectId,
   });
 
   const { data: characters, isLoading: charactersLoading } = useQuery({
     queryKey: ['subject-characters', subjectId],
-    queryFn: () => bangumiApi.getSubjectCharacters(subjectId),
+    queryFn: () => GetSubjectCharacters(subjectId),
     enabled: !!subjectId,
   });
 
   const { data: episodes, isLoading: episodesLoading } = useQuery({
     queryKey: ['subject-episodes', subjectId],
-    queryFn: () => bangumiApi.getSubjectEpisodes(subjectId, 0, 20, 0),
+    queryFn: () => GetSubjectEpisodes(subjectId, 0, 20, 0),
     enabled: !!subjectId,
   });
 

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import SubjectCard from '@/components/molecules/subject-card';
 import SearchForm from '@/components/molecules/search-form';
-import { bangumiApi } from '@/api/api';
+import { SearchSubjects } from '@/api/api';
 
 interface SearchFormData {
   keyword: string;
@@ -17,7 +17,7 @@ interface SearchFormData {
     queryKey: ['search', searchParams],
     queryFn: () =>
       searchParams
-        ? bangumiApi.searchSubjects(searchParams.keyword, searchParams.type, 'large', 0, 25)
+        ? SearchSubjects(searchParams.keyword, searchParams.type, 'large', 0, 25)
         : Promise.resolve(null),
     enabled: !!searchParams,
   });

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import SubjectCard from '@/components/molecules/subject-card';
-import { bangumiApi } from '@/api/api';
+import { GetCalendar } from '@/api/api';
 import { CalendarItem } from '@/types/bangumi';
 import { convertToTraditional } from '@/utils/opencc';
 
@@ -10,7 +10,7 @@ const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
  const CalendarView = () => {
   const { data: calendar, isLoading, error } = useQuery({
     queryKey: ['calendar'],
-    queryFn: bangumiApi.getCalendar,
+    queryFn: GetCalendar,
   });
 
   if (isLoading) {
