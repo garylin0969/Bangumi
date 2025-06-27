@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/atoms/loading-spinner';
 import { SubjectCard } from '@/components/molecules/subject-card';
 import { bangumiApi, CalendarItem } from '@/lib/api';
-import { convertToTraditional } from '@/lib/opencc';
+import { convertToTraditional } from '@/utils/opencc';
 
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 
