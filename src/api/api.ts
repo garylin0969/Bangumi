@@ -8,7 +8,7 @@ import type {
   User,
   UserCollectionsResponse,
   EpisodesResponse,
-} from '../types/bangumi';
+} from '@/types/bangumi';
 
 // 獲取條目信息
 export const GetSubject = (id: number): Promise<Subject> => {
