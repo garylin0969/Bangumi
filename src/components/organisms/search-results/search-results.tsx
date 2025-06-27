@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { SearchSubjects } from '@/api/api';
+import { SearchSubjects } from '@/api/subject';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import SearchForm from '@/components/molecules/search-form';
 import SubjectCard from '@/components/molecules/subject-card';

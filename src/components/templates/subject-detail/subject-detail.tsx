@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { GetSubject, GetSubjectCharacters, GetSubjectEpisodes } from '@/api/api';
+import { GetSubject, GetSubjectCharacters, GetSubjectEpisodes } from '@/api/subject';
 import ImageWithFallback from '@/components/atoms/image-with-fallback';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import RatingStars from '@/components/atoms/rating-stars';
