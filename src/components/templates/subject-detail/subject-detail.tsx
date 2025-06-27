@@ -17,7 +17,7 @@ const getSubjectTypeName = (type: number): string => {
   return typeMap[type as keyof typeof typeMap] || '未知';
 };
 
-export const SubjectDetail = () => {
+ const SubjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const subjectId = Number(id);
 
@@ -239,3 +239,5 @@ export const SubjectDetail = () => {
     </div>
   );
 };
+
+export default SubjectDetail;

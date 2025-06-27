@@ -13,7 +13,7 @@ const navItems = [
   { path: '/search', label: '搜尋', icon: Search },
 ];
 
-export const Layout = ({ children }: LayoutProps) => {
+ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   return (
@@ -93,3 +93,5 @@ export const Layout = ({ children }: LayoutProps) => {
     </div>
   );
 };
+
+export default Layout;
