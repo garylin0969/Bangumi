@@ -27,12 +27,13 @@ export const GetSubjectPersons = (id: number): Promise<Person[]> => {
 
 // 獲取條目章節
 export const GetSubjectEpisodes = (id: number, type?: number, limit?: number, offset?: number): Promise<EpisodesResponse> => {
-  const params = new URLSearchParams();
-  if (type !== undefined) params.append('type', type.toString());
-  if (limit !== undefined) params.append('limit', limit.toString());
-  if (offset !== undefined) params.append('offset', offset.toString());
+  const params = {
+    type,
+    limit,
+    offset
+  }
 
-  return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes`,{params})
+  return bgmApi.get<EpisodesResponse>(`/v0/subjects/${id}/episodes`, { params });
 }
 
 // 獲取角色信息
@@ -67,14 +68,15 @@ export const GetCalendar = (): Promise<CalendarItem[]> => {
 
 // 搜索條目
 export const SearchSubjects = (keyword: string, type?: number, responseGroup?: 'large' | 'medium' | 'small', start?: number, max_results?: number): Promise<SearchResult> => {
-  const params = new URLSearchParams();
-  params.append('keyword', keyword);
-  if (type !== undefined) params.append('type', type.toString());
-  if (responseGroup) params.append('responseGroup', responseGroup);
-  if (start !== undefined) params.append('start', start.toString());
-  if (max_results !== undefined) params.append('max_results', max_results.toString());
+  const params = {
+    keyword,
+    type,
+    responseGroup,
+    start,
+    max_results
+  }
 
-  return bgmApi.get<SearchResult>(`/search/subject/${encodeURIComponent(keyword)}`,{params});
+  return bgmApi.get<SearchResult>(`/search/subject/${encodeURIComponent(keyword)}`, { params });
 }
 
 // 獲取用戶基本信息（公開部分）
@@ -84,11 +86,12 @@ export const GetUser = (username: string): Promise<User> => {
 
 // 獲取用戶收藏（公開部分）
 export const GetUserCollections = (username: string, subject_type?: number, type?: number, limit?: number, offset?: number): Promise<UserCollectionsResponse> => {
-  const params = new URLSearchParams();
-  if (subject_type !== undefined) params.append('subject_type', subject_type.toString());
-  if (type !== undefined) params.append('type', type.toString());
-  if (limit !== undefined) params.append('limit', limit.toString());
-  if (offset !== undefined) params.append('offset', offset.toString());
+  const params = {
+    subject_type,
+    type,
+    limit,
+    offset
+  }
 
-  return bgmApi.get<UserCollectionsResponse>(`/v0/users/${username}/collections`,{params});
+  return bgmApi.get<UserCollectionsResponse>(`/v0/users/${username}/collections`, { params });
 };
