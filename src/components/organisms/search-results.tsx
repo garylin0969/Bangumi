@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/atoms/loading-spinner';
+import LoadingSpinner from '@/components/atoms/loading-spinner';
 import { SubjectCard } from '@/components/molecules/subject-card';
 import { SearchForm } from '@/components/molecules/search-form';
 import { bangumiApi, SearchResult } from '@/lib/api';
