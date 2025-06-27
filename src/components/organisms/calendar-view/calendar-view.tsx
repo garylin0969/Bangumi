@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { GetCalendar } from '@/api/api';
+import { GetCalendar } from '@/api/subject';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import SubjectCard from '@/components/molecules/subject-card';
 import { CalendarItem } from '@/types';

@@ -1,4 +1,4 @@
-import type { CalendarItem, Subject, Character, Person, SearchResult, EpisodesResponse } from '@/types';
+import type { CalendarItem, Subject, SearchResult, EpisodesResponse, Character, Person } from '@/types';
 import bgmApi from './bgm-api';
 
 // 獲取每日放送
